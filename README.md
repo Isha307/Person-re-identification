@@ -17,7 +17,7 @@
    Ensure the File structure is as follow:
    
    ```
-   ECN/data    
+   Person-Reidentification/data    
    │
    └───market OR duke OR msmt17
       │   
