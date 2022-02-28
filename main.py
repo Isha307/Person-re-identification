@@ -13,7 +13,7 @@ from torch.utils.data import DataLoader
 from reid.datasets.domain_adaptation import DA
 from reid import models
 from reid.trainers import Trainer
-from reid.evaluators import Evaluator
+from reid.evaluators import Evaluator, CascadeEvaluator
 from reid.utils.data import transforms as T
 from reid.utils.data.preprocessor import Preprocessor, UnsupervisedCamStylePreprocessor
 from reid.utils.logging import Logger
@@ -107,7 +107,7 @@ def main(args):
     model_inv = model_inv.to(device)
 
     # Evaluator
-    evaluator = Evaluator(model)
+    evaluator = CascadeEvaluator(model,model_inv,embed_dist_fn=lambda x: F.softmax(x, dim=1).data[:, 0])
     if args.evaluate:
         print("Test:")
         evaluator.evaluate(query_loader, gallery_loader, dataset.query,
@@ -156,7 +156,6 @@ def main(args):
 
     # Final test
     print('Test with best model:')
-    evaluator = Evaluator(model)
     evaluator.evaluate(query_loader, gallery_loader, dataset.query,
                        dataset.gallery, args.output_feature)
 
